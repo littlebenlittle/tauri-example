@@ -8,18 +8,15 @@ use wasm_logger;
 use yew::prelude::*;
 
 #[wasm_bindgen(
-    inline_js = "export function invoke_tauri(cmd, args = {}) { return window.__TAURI__._invoke(cmd, args = args) }"
+    inline_js = "export function invoke_tauri(cmd, args = {}) { return window.__TAURI__._invoke(cmd, args=args) }"
 )]
 extern "C" {
     async fn invoke_tauri(cmd: &str, args: JsValue) -> JsValue;
 }
 
-pub async fn invoke<M: Serialize + Deserialize<'static>>(cmd: &str, args: M) -> JsValue {
-    invoke_tauri(cmd, JsValue::from_serde(&args).unwrap()).await
-}
-
 async fn get_answer() -> String {
-    match invoke("request_answer", ()).await.as_string() {
+    let answer = invoke_tauri("get_answer", JsValue::undefined()).await;
+    match answer.as_string() {
         Some(s) => s,
         None => "unknown!".into(),
     }

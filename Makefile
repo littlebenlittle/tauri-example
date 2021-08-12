@@ -1,8 +1,10 @@
 build:
-	cd frontend; wasm-pack build --target web
+	wasm-pack build --target web --out-name app
 
-rollup:
-	npx rollup frontend/pkg/frontend.js --format iife --file public/bundle.js
+package:
+	rsync pkg/app.js public/
+	rsync pkg/app_bg.wasm public/
+	rsync -r pkg/snippets public/
 
 serve:
 	npx tauri dev

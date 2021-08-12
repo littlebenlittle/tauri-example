@@ -3,4 +3,7 @@
 Cargo.lock
 bin/
 pkg/
+node_modules/
 wasm-pack.log
+public/*
+!public/index.html

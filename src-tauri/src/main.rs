@@ -1,30 +1,16 @@
 #![cfg_attr(
-  all(not(debug_assertions), target_os = "windows"),
-  windows_subsystem = "windows"
+    all(not(debug_assertions), target_os = "windows"),
+    windows_subsystem = "windows"
 )]
 
-mod cmd;
-
 fn main() {
-  tauri::AppBuilder::new()
-    .invoke_handler(|_webview, arg| {
-      use cmd::Cmd::*;
-      match serde_json::from_str(arg) {
-        Err(e) => {
-          Err(e.to_string())
-        }
-        Ok(command) => {
-          match command {
-            // definitions for your custom commands from Cmd here
-            MyCustomCommand { argument } => {
-              //  your command code
-              println!("{}", argument);
-            }
-          }
-          Ok(())
-        }
-      }
-    })
-    .build()
-    .run();
+    tauri::Builder::default()
+        .invoke_handler(tauri::generate_handler![request_answer])
+        .run(tauri::generate_context!())
+        .expect("error while running tauri application");
+}
+
+#[tauri::command]
+fn request_answer() -> String {
+    "Foo!".into()
 }
