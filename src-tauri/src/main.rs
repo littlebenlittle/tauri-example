@@ -5,12 +5,12 @@
 
 fn main() {
     tauri::Builder::default()
-        .invoke_handler(tauri::generate_handler![request_answer])
+        .invoke_handler(tauri::generate_handler![get_answer])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
 }
 
 #[tauri::command]
-fn request_answer() -> String {
+fn get_answer() -> String {
     "Foo!".into()
 }
