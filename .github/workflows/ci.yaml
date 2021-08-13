@@ -1,0 +1,62 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches:
+      - clean.d/ci
+
+jobs:
+
+  build:
+    name: build
+    runs-on: ubuntu-20.04
+    steps:
+
+      # TODO chroot setup and dependency install can be cached
+      # TODO tauri-cli can cached
+      # TODO upload appimage and package artifacts separately when apk packages are supported
+
+      - name: Install alpine-chroot-install
+        run: |
+          arch=aarch64
+          wget https://raw.githubusercontent.com/alpinelinux/alpine-chroot-install/v0.13.0/alpine-chroot-install
+          sha1sum <(cat alpine-chroot-install) <(echo "44406f1a060b9f08b7e5ac264c8b9527b32fb54  alpine-chroot-install") || exit 1
+          chmod +x alpine-chroot-install
+          ln -s $PWD/alpine-chroot-install /usr/local/bin/alpine-chroot-install
+
+      - name: Setup chroot
+        run: |
+          mkdir /mnt/aarch64-alpine
+          alpine-chroot-install -a aarch64 -d /aarch64-alpine -i /mnt/aarch64-alpine
+          rm /alpine-chroot-install
+
+      - name: Install chroot dependencies
+        run: |
+          libs='webkit2gtk-dev libressl-dev'
+          dev_tools='git squashfs-tools build-base rust cargo nodejs-current npm'
+          /aarch64-alpine/enter-chroot -c "apk add $libs $dev_tools"
+
+      - name: Add user to chroot
+        run: |
+          useradd user
+          
+      - name: Build tauri-cli
+        run: |
+          /aarch64-alpine/enter-chroot -u user -c "cargo install --version 1.0.0-beta.5 tauri-cli"
+
+      - name: Build app
+        run: |
+          /aarch64-alpine/enter-chroot -u user -c "cd tauri-example; cargo tauri build"
+
+      - name: Move bundle to shared path
+        run: |
+          /aarch64-alpine/enter-chroot -u user -c "mv tauri-example/src-tauri/target/release/bundle /mnt/aarch64-alpine/"
+
+      - name: Compress bundle
+        run: |
+          tar -czf /mnt/aarch64-alpine/bundle.tar.gz /mnt/aarch64-alpine/bundle 
+
+      - uses: actions/upload-artifact@v2
+        with:
+          name: bundle.tar.gz
+          path: /mnt/aarch64-alpine/bundle.tar.gz
