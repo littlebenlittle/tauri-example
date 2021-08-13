@@ -6,12 +6,10 @@ on:
       - clean.d/ci
 
 jobs:
-
   build:
     name: build
     runs-on: ubuntu-20.04
     steps:
-
       # TODO chroot setup and dependency install can be cached
       # TODO tauri-cli can cached
       # TODO upload appimage and package artifacts separately when apk packages are supported
@@ -39,7 +37,7 @@ jobs:
       - name: Add user to chroot
         run: |
           /aarch64-alpine/enter-chroot adduser -D user
-          
+
       - name: Build tauri-cli
         run: |
           /aarch64-alpine/enter-chroot -u user cargo install --version 1.0.0-beta.5 tauri-cli
@@ -54,7 +52,7 @@ jobs:
 
       - name: Compress bundle
         run: |
-          tar -czf bundle.tar.gz mnt/aarch64-alpine/bundle 
+          tar -czf bundle.tar.gz mnt/aarch64-alpine/bundle
 
       - uses: actions/upload-artifact@v2
         with:
