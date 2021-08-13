@@ -26,8 +26,8 @@ jobs:
 
       - name: Setup chroot
         run: |
-          mkdir /mnt/aarch64-alpine
-          alpine-chroot-install -a aarch64 -d /aarch64-alpine -i /mnt/aarch64-alpine
+          mkdir $PWD/mnt/aarch64-alpine
+          alpine-chroot-install -a aarch64 -d /aarch64-alpine -i $PWD/mnt/aarch64-alpine
           rm /alpine-chroot-install
 
       - name: Install chroot dependencies
@@ -50,13 +50,13 @@ jobs:
 
       - name: Move bundle to shared path
         run: |
-          /aarch64-alpine/enter-chroot -u user -c "mv tauri-example/src-tauri/target/release/bundle /mnt/aarch64-alpine/"
+          /aarch64-alpine/enter-chroot -u user -c "mv tauri-example/src-tauri/target/release/bundle $PWD/mnt/aarch64-alpine/"
 
       - name: Compress bundle
         run: |
-          tar -czf /mnt/aarch64-alpine/bundle.tar.gz /mnt/aarch64-alpine/bundle 
+          tar -czf bundle.tar.gz mnt/aarch64-alpine/bundle 
 
       - uses: actions/upload-artifact@v2
         with:
           name: bundle.tar.gz
-          path: /mnt/aarch64-alpine/bundle.tar.gz
+          path: bundle.tar.gz
