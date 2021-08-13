@@ -1,1 +1,0 @@
-export function invoke_tauri(cmd, args = {}) { return window.__TAURI__._invoke(cmd, args=args) }
