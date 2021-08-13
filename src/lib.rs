@@ -1,7 +1,6 @@
 #![recursion_limit = "1024"]
 
 use js_sys;
-use serde::{Deserialize, Serialize};
 use wasm_bindgen::prelude::*;
 use wasm_bindgen_futures;
 use wasm_logger;

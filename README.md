@@ -7,7 +7,8 @@ This is an example app demonstrating a `wasm` frontend built with [Yew](https://
 ## Build
 
 ```sh
-cargo install wasm-pack
+cargo install wasm-pack 
+cargo install --version 1.0.0-beta.5 tauri-cli
 npm i --include=dev
 make build
 make package
