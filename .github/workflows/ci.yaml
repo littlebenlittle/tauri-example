@@ -34,7 +34,7 @@ jobs:
           libs: webkit2gtk-dev libressl-dev
           dev_tools: git squashfs-tools build-base rust cargo nodejs-current npm
         run: |
-          /aarch64-alpine/enter-chroot -c "apk add $libs $dev_tools"
+          /aarch64-alpine/enter-chroot "apk add $libs $dev_tools"
 
       - name: Add user to chroot
         run: |
@@ -42,15 +42,15 @@ jobs:
           
       - name: Build tauri-cli
         run: |
-          /aarch64-alpine/enter-chroot -u user -c "cargo install --version 1.0.0-beta.5 tauri-cli"
+          /aarch64-alpine/enter-chroot -u user "cargo install --version 1.0.0-beta.5 tauri-cli"
 
       - name: Build app
         run: |
-          /aarch64-alpine/enter-chroot -u user -c "cd tauri-example; cargo tauri build"
+          /aarch64-alpine/enter-chroot -u user "cd tauri-example; cargo tauri build"
 
       - name: Move bundle to shared path
         run: |
-          /aarch64-alpine/enter-chroot -u user -c "mv tauri-example/src-tauri/target/release/bundle $PWD/mnt/aarch64-alpine/"
+          /aarch64-alpine/enter-chroot -u user "mv tauri-example/src-tauri/target/release/bundle $PWD/mnt/aarch64-alpine/"
 
       - name: Compress bundle
         run: |
