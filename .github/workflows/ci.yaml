@@ -3,13 +3,15 @@ name: Continuous Integration
 on:
   push:
     branches:
-      - clean.d/ci
+      - dev
 
 jobs:
   build:
     name: build
     runs-on: ubuntu-20.04
     steps:
+
+      # TODO build wasm (outside of emulated chroot)
       # TODO chroot setup and dependency install can be cached
       # TODO tauri-cli can cached
       # TODO upload appimage and package artifacts separately when apk packages are supported
