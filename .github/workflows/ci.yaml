@@ -26,7 +26,7 @@ jobs:
 
       - name: Setup chroot
         run: |
-          mkdir $PWD/mnt/aarch64-alpine
+          mkdir -p $PWD/mnt/aarch64-alpine
           alpine-chroot-install -a aarch64 -d /aarch64-alpine -i $PWD/mnt/aarch64-alpine
           rm /alpine-chroot-install
 
