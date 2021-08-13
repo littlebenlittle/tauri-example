@@ -38,7 +38,7 @@ jobs:
 
       - name: Add user to chroot
         run: |
-          useradd user
+          /aarch64-alpine/enter-chroot useradd user
           
       - name: Build tauri-cli
         run: |
