@@ -28,7 +28,6 @@ jobs:
         run: |
           mkdir -p $PWD/mnt/aarch64-alpine
           sudo alpine-chroot-install -a aarch64 -d /aarch64-alpine -i $PWD/mnt/aarch64-alpine
-          rm /alpine-chroot-install
 
       - name: Install chroot dependencies
         run: |
