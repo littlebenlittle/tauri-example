@@ -17,6 +17,8 @@ jobs:
       # TODO tauri-cli can cached
       # TODO upload appimage and package artifacts separately when apk packages are supported
 
+      - uses: actions/checkout@v2
+
       - uses: ./.github/alpine-chroot
         with:
           version: '0.13.0'
@@ -27,8 +29,6 @@ jobs:
       - name: Build tauri-cli
         run: |
           /aarch64-alpine/enter-chroot -u user cargo install --version 1.0.0-beta.5 tauri-cli
-
-      - uses: actions/checkout@v2
 
       - name: Build app
         run: |
