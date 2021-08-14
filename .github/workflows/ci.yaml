@@ -20,7 +20,10 @@ jobs:
       - uses: actions/checkout@v2
 
       - run: |
-          ls .github -Al
+          ls -Al ./.github/alpine-chroot
+          ls -Al /home/runner/work/tauri-example/tauri-example/
+          ls -Al /home/runner/work/tauri-example/tauri-example/.github/alpine-chroot
+          ls -Al /home/runner/work/tauri-example/tauri-example/.github/alpine-chroot
 
       - uses: ./.github/alpine-chroot
         with:
