@@ -53,9 +53,11 @@ jobs:
 
       - uses: ./alpine-chroot-actions/actions/exec
         with:
-          cmd: |
-            cargo install --version 1.0.0-beta.5 tauri-cli
-            cd `pwd`/tauri-example; cargo tauri build
+          cmd: cargo install --version 1.0.0-beta.5 tauri-cli
+
+      - uses: ./alpine-chroot-actions/actions/exec
+        with:
+          cmd: cargo tauri build
 
       - run: tar -czf bundle.tar.gz tauri-example/src-tauri/target/release/bundle
 
