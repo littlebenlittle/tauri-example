@@ -31,16 +31,14 @@ jobs:
         with:
           node-version: '16'
 
-      - if: steps.cache-chroot.outputs.cache-hit != 'true'
-        id: cache-deps
+      - if: ${{ steps.cache-chroot.outputs.cache-hit == 'false' }}
+        id: cache-node
         uses: actions/cache@v2
         with:
           path: alpine-chroot-actions/node_modules
-          key: actions_deps
+          key: node_deps
 
-      - if: |
-          steps.cache-chroot.outputs.cache-hit != 'true'
-          && steps.cache-deps.outputs.cache-hit != 'true'
+      - if: ${{ steps.cache-node.outputs.cache-hit == 'false' }}
         run: |
           cd ./alpine-chroot-actions
           npm install
