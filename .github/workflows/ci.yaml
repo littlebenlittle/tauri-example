@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - ci
 
 jobs:
   build:
@@ -16,37 +17,22 @@ jobs:
       # TODO tauri-cli can cached
       # TODO upload appimage and package artifacts separately when apk packages are supported
 
-      - name: Install alpine-chroot-install
-        run: |
-          arch=aarch64
-          wget https://raw.githubusercontent.com/alpinelinux/alpine-chroot-install/v0.13.0/alpine-chroot-install
-          sha1sum <(cat alpine-chroot-install) <(echo "44406f1a060b9f08b7e5ac264c8b9527b32fb54  alpine-chroot-install") || exit 1
-          chmod +x alpine-chroot-install
-          ln -s $PWD/alpine-chroot-install /usr/local/bin/alpine-chroot-install
-
-      - name: Setup chroot
-        run: |
-          mkdir -p $PWD/mnt/aarch64-alpine
-          sudo alpine-chroot-install -a aarch64 -d /aarch64-alpine -i $PWD/mnt/aarch64-alpine
-
-      - name: Install chroot dependencies
-        env:
-          libs: webkit2gtk-dev libressl-dev
-          dev_tools: git squashfs-tools build-base rust cargo nodejs-current npm
-        run: |
-          /aarch64-alpine/enter-chroot apk add $libs $dev_tools
-
-      - name: Add user to chroot
-        run: |
-          /aarch64-alpine/enter-chroot adduser -D user
+      - uses: littlebenlittle/actions-alpine-chroot@v0.1
+        with:
+          version: '0.13.0'
+          arch: aarch64
+          packages: webkit2gtk-dev libressl-dev squashfs-tools build-base rust cargo nodejs-current npm
+          mount: $PWD
 
       - name: Build tauri-cli
         run: |
           /aarch64-alpine/enter-chroot -u user cargo install --version 1.0.0-beta.5 tauri-cli
 
+      - uses: actions/checkout@v2
+
       - name: Build app
         run: |
-          /aarch64-alpine/enter-chroot -u user cd tauri-example; cargo tauri build
+          /aarch64-alpine/enter-chroot -u user cd $PWD/tauri-example; cargo tauri build
 
       - name: Move bundle to shared path
         run: |
