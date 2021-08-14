@@ -17,9 +17,17 @@ jobs:
       # TODO tauri-cli can cached
       # TODO upload appimage and package artifacts separately when apk packages are supported
 
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
       - uses: actions/checkout@v2
         with:
           submodules: recursive
+
+      - run: |
+          cd ./alpine-chroot-actions
+          npm install
 
       - uses: actions/cache@v2
         with:
