@@ -48,10 +48,7 @@ jobs:
       - if: steps.cache-chroot.outputs.cache-hit != 'true'
         uses: ./alpine-chroot-actions/actions/install
         with:
-          chroot_dir: /alpine
           arch: aarch64
-          alpine_version: '0.13.0'
-          mount: $PWD
           packages: build-base rust cargo nodejs-current npm webkit2gtk-dev libressl-dev squashfs-tools
 
       - uses: ./alpine-chroot-actions/actions/exec
