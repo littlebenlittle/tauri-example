@@ -21,28 +21,25 @@ jobs:
         with:
           submodules: recursive
 
-      - uses: ./.github/alpine-chroot
+      - uses: actions/cache@v2
         with:
-          version: '0.13.0'
+          path: /alpine
+
+      - uses: ./alpine-chroot-actions/install
+        with:
+          chroot_dir: /alpine
           arch: aarch64
-          packages: webkit2gtk-dev libressl-dev squashfs-tools build-base rust cargo nodejs-current npm
+          alpine_version: '0.13.0'
           mount: $PWD
+          packages: build-base rust cargo nodejs-current npm webkit2gtk-dev libressl-dev squashfs-tools
 
-      - name: Build tauri-cli
-        run: |
-          /aarch64-alpine/enter-chroot -u user cargo install --version 1.0.0-beta.5 tauri-cli
+      - uses: ./alpine-chroot-actions/exec
+        with:
+          cmd: |
+            cargo install --version 1.0.0-beta.5 tauri-cli
+            cd $PWD/tauri-example; cargo tauri build
 
-      - name: Build app
-        run: |
-          /aarch64-alpine/enter-chroot -u user cd $PWD/tauri-example; cargo tauri build
-
-      - name: Move bundle to shared path
-        run: |
-          /aarch64-alpine/enter-chroot -u user mv tauri-example/src-tauri/target/release/bundle $PWD/mnt/aarch64-alpine/
-
-      - name: Compress bundle
-        run: |
-          tar -czf bundle.tar.gz mnt/aarch64-alpine/bundle
+      - run: tar -czf bundle.tar.gz tauri-example/src-tauri/target/release/bundle
 
       - uses: actions/upload-artifact@v2
         with:
