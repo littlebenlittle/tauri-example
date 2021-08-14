@@ -24,6 +24,7 @@ jobs:
       - uses: actions/cache@v2
         with:
           path: /alpine
+          key: alpine-chroot
 
       - uses: ./alpine-chroot-actions/install
         with:
