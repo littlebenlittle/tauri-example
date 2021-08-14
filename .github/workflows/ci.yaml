@@ -55,7 +55,7 @@ jobs:
         with:
           cmd: |
             cargo install --version 1.0.0-beta.5 tauri-cli
-            cd $PWD/tauri-example; cargo tauri build
+            cd `pwd`/tauri-example; cargo tauri build
 
       - run: tar -czf bundle.tar.gz tauri-example/src-tauri/target/release/bundle
 
