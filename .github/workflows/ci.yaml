@@ -18,9 +18,8 @@ jobs:
       # TODO upload appimage and package artifacts separately when apk packages are supported
 
       - uses: actions/checkout@v2
-
-      - run: |
-          ls -Al /home/runner/work/tauri-example/tauri-example/.github/alpine-chroot
+        with:
+          submodules: recursive
 
       - uses: ./.github/alpine-chroot
         with:

@@ -1,3 +1,4 @@
 [submodule ".github/alpine-chroot"]
 	path = .github/alpine-chroot
 	url = https://github.com/littlebenlittle/actions-alpine-chroot.git
+	branch = v0.1
