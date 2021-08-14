@@ -31,7 +31,7 @@ jobs:
           node-version: '16'
 
       - name: Cache node deps
-        if: ${{ steps.cache-chroot.outputs.cache-hit == 'false' }}
+        if: ${{ steps.cache-chroot.outputs.cache-hit != 'true' }}
         id: cache-node
         uses: actions/cache@v2
         with:
