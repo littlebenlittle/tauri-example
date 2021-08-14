@@ -17,7 +17,7 @@ jobs:
       # TODO tauri-cli can cached
       # TODO upload appimage and package artifacts separately when apk packages are supported
 
-      - uses: littlebenlittle/actions-alpine-chroot@v0.1
+      - uses: alpine-chroot
         with:
           version: '0.13.0'
           arch: aarch64
