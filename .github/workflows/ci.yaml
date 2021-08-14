@@ -26,7 +26,7 @@ jobs:
           path: /alpine
           key: alpine-chroot
 
-      - uses: ./alpine-chroot-actions/install
+      - uses: ./alpine-chroot-actions/actions/install
         with:
           chroot_dir: /alpine
           arch: aarch64
@@ -34,7 +34,7 @@ jobs:
           mount: $PWD
           packages: build-base rust cargo nodejs-current npm webkit2gtk-dev libressl-dev squashfs-tools
 
-      - uses: ./alpine-chroot-actions/exec
+      - uses: ./alpine-chroot-actions/actions/exec
         with:
           cmd: |
             cargo install --version 1.0.0-beta.5 tauri-cli
