@@ -13,7 +13,6 @@ jobs:
     steps:
 
       # TODO build wasm (outside of emulated chroot)
-      # TODO chroot setup and dependency install can be cached
       # TODO tauri-cli can cached
       # TODO upload appimage and package artifacts separately when apk packages are supported
 
@@ -31,35 +30,42 @@ jobs:
         with:
           node-version: '16'
 
-      - if: ${{ steps.cache-chroot.outputs.cache-hit == 'false' }}
+      - name: Cache node deps
+        if: ${{ steps.cache-chroot.outputs.cache-hit == 'false' }}
         id: cache-node
         uses: actions/cache@v2
         with:
           path: alpine-chroot-actions/node_modules
           key: node_deps
 
-      - if: ${{ steps.cache-node.outputs.cache-hit == 'false' }}
+      - name: Install node dependencies
+        if: ${{ steps.cache-node.outcome != 'skipped' }}
         run: |
           cd ./alpine-chroot-actions
           npm install
 
-      - if: steps.cache-chroot.outputs.cache-hit != 'true'
+      - name: Install alpine chroot
+        if: steps.cache-chroot.outputs.cache-hit != 'true'
         uses: ./alpine-chroot-actions/actions/install
         with:
           arch: aarch64
           packages: build-base rust cargo nodejs-current npm webkit2gtk-dev libressl-dev squashfs-tools
 
-      - uses: ./alpine-chroot-actions/actions/exec
+      - name: Build cargo-tauri
+        uses: ./alpine-chroot-actions/actions/exec
         with:
           cmd: cargo install --version 1.0.0-beta.5 tauri-cli
 
-      - uses: ./alpine-chroot-actions/actions/exec
+      - name: Build app
+        uses: ./alpine-chroot-actions/actions/exec
         with:
           cmd: cargo tauri build
 
-      - run: tar -czf bundle.tar.gz tauri-example/src-tauri/target/release/bundle
+      - name: Compress bundle
+        run: tar -czf bundle.tar.gz tauri-example/src-tauri/target/release/bundle
 
-      - uses: actions/upload-artifact@v2
+      - name: Upload bundle
+        uses: actions/upload-artifact@v2
         with:
           name: bundle.tar.gz
           path: bundle.tar.gz
