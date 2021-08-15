@@ -49,7 +49,13 @@ jobs:
         uses: ./alpine-chroot-actions/actions/install
         with:
           arch: aarch64
-          packages: build-base rust cargo rustup nodejs-current npm webkit2gtk-dev libressl-dev squashfs-tools
+          packages: build-base rustup nodejs-current npm webkit2gtk-dev libressl-dev squashfs-tools
+
+      - name: Rustup
+        if: steps.cache-chroot.outputs.cache-hit != 'true'
+        uses: ./alpine-chroot-actions/actions/exec
+        with:
+          cmd: rustup-init -y
 
       - name: Configure rust
         if: steps.cache-chroot.outputs.cache-hit != 'true'
