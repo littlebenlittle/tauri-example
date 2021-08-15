@@ -61,17 +61,17 @@ jobs:
         if: steps.cache-chroot.outputs.cache-hit != 'true'
         uses: ./alpine-chroot-actions/actions/exec
         with:
-          cmd: rustup default nightly
+          cmd: /home/user/.cargo/bin/rustup default nightly
 
       - name: Build cargo-tauri
         uses: ./alpine-chroot-actions/actions/exec
         with:
-          cmd: cargo install --version 1.0.0-beta.5 tauri-cli
+          cmd: /home/user/.cargo/bin/cargo install --version 1.0.0-beta.5 tauri-cli
 
       - name: Build app
         uses: ./alpine-chroot-actions/actions/exec
         with:
-          cmd: cargo tauri build
+          cmd: /home/user/.cargo/bin/cargo tauri build
 
       - name: Compress bundle
         run: tar -czf bundle.tar.gz tauri-example/src-tauri/target/release/bundle
