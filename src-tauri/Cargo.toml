@@ -1,10 +1,10 @@
 [package]
 name = "app"
 version = "0.1.0"
-description = "A Tauri App"
-authors = ["you"]
-license = ""
-repository = ""
+description = "an app using tauri and yew"
+authors = ["ben little <ben.little@benlittle.dev>"]
+license = "multiple"
+repository = "https://github.com/littlebenlittle/tauri-example"
 default-run = "app"
 edition = "2018"
 build = "src/build.rs"
